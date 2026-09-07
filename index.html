@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Challenge System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #071739, #1c315b);
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 35px;
+        }
+
+        header p {
+            font-size: 17px;
+            color: #E3C39D;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* WELCOME */
+        .welcome {
+            background: white;
+            color: #071739;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .welcome h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 450px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 17px;
+            margin: 10px 0;
+        }
+
+        .start-button {
+            background: #071739;
+            color: white;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 10px;
+        }
+
+        .start-button:hover {
+            background: #1c315b;
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            margin-bottom: 25px;
+        }
+
+        .dashboard h2 {
+            margin-bottom: 5px;
+        }
+
+        .dashboard p {
+            color: #E3C39D;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            color: #071739;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            margin: 5px 0;
+            font-size: 28px;
+        }
+
+        .stat-card p {
+            color: #555;
+            margin: 0;
+        }
+
+        /* MENU */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+        }
+
+        .subject {
+            background: white;
+            color: #071739;
+            font-weight: bold;
+            min-height: 110px;
+            font-size: 19px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .subject:hover {
+            background: #E3C39D;
+        }
+
+        .subject span {
+            display: block;
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .action {
+            background: #E3C39D;
+            color: #071739;
+            font-weight: bold;
+        }
+
+        /* BOXES */
+        .quiz-box,
+        .result-box,
+        .review-box {
+            background: white;
+            color: #071739;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .question {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        .answer {
+            width: 100%;
+            padding: 14px;
+            font-size: 17px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .answer:focus,
+        .name-input:focus {
+            outline: none;
+            border-color: #1c315b;
+        }
+
+        .next {
+            background: #071739;
+            color: white;
+            width: 100%;
+        }
+
+        .next:hover {
+            background: #1c315b;
+        }
+
+        .back {
+            background: #E3C39D;
+            color: #071739;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+
+        .wrong {
+            color: red;
+            font-weight: bold;
+        }
+
+        .score {
+            font-size: 25px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #ddd;
+            border-radius: 20px;
+            height: 12px;
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            height: 12px;
+            width: 0%;
+            background: #071739;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #E3C39D;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+
+            .menu {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            .quiz-box,
+            .result-box,
+            .review-box,
+            .welcome {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Learning Challenge System</h1>
+    <p>Learn • Practice • Challenge Yourself</p>
+</header>
+
+<div class="container">
+
+    <!-- WELCOME SCREEN -->
+    <div id="welcome" class="welcome">
+
+        <h2>👋 Welcome!</h2>
+
+        <p>
+            Enter your name to begin your learning journey.
+        </p>
+
+        <input
+            type="text"
+            id="studentName"
+            class="name-input"
+            placeholder="Enter your name..."
+        >
+
+        <br>
+
+        <button class="start-button" onclick="enterSystem()">
+            🚀 Enter Learning System
+        </button>
+
+    </div>
+
+
+    <!-- MAIN SYSTEM -->
+    <div id="mainSystem" class="hidden">
+
+        <!-- DASHBOARD -->
+        <div class="dashboard">
+
+            <h2>Welcome, <span id="displayName"></span>! 👋</h2>
+
+            <p>Choose a subject and challenge yourself.</p>
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <h3 id="scoreStat">0</h3>
+                    <p>🏆 Total Score</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="questionStat">0</h3>
+                    <p>📝 Questions</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 id="percentageStat">0%</h3>
+                    <p>📊 Percentage</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MAIN MENU -->
+        <div id="menu">
+
+            <div class="menu">
+
+                <button class="subject" onclick="startQuiz('Economics')">
+                    <span>📖</span>
+                    Economics
+                </button>
+
+                <button class="subject" onclick="startQuiz('Geography')">
+                    <span>🌍</span>
+                    Geography
+                </button>
+
+                <button class="subject" onclick="startQuiz('History')">
+                    <span>📜</span>
+                    History
+                </button>
+
+                <button class="subject" onclick="startQuiz('Marketing')">
+                    <span>📢</span>
+                    Marketing
+                </button>
+
+                <button class="action" onclick="showTotal()">
+                    🏆 View Total Score
+                </button>
+
+                <button class="action" onclick="showPercentage()">
+                    📊 View Percentage
+                </button>
+
+                <button class="action" onclick="showGrade()">
+                    🎓 Grade Evaluator
+                </button>
+
+                <button class="action" onclick="showIncorrect()">
+                    ❌ Incorrect Questions
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUIZ -->
+        <div id="quiz" class="quiz-box hidden">
+
+            <h2 id="quizTitle"></h2>
+
+            <p id="questionNumber"></p>
+
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div id="question" class="question"></div>
+
+            <input
+                type="text"
+                id="answer"
+                class="answer"
+                placeholder="Type your answer..."
+                onkeydown="handleEnter(event)"
+            >
+
+            <button class="next" onclick="submitAnswer()">
+                Submit Answer
+            </button>
+
+            <p id="feedback"></p>
+
+            <button class="back" onclick="goHome()">
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+
+        <!-- RESULT -->
+        <div id="result" class="result-box hidden">
+
+            <h2>🎉 Quiz Complete!</h2>
+
+            <p id="resultSubject"></p>
+
+            <div id="resultScore" class="score"></div>
+
+            <p id="resultPercentage"></p>
+
+            <p id="resultGrade"></p>
+
+            <p id="resultMessage"></p>
+
+            <button class="next" onclick="restartQuiz()">
+                🔄 Retake Quiz
+            </button>
+
+            <button class="back" onclick="goHome()">
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+        <div id="information" class="result-box hidden">
+
+            <h2 id="infoTitle"></h2>
+
+            <div id="infoContent"></div>
+
+            <button class="back" onclick="goHome()">
+                ← Back to Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Learning Challenge System | Learn • Practice • Succeed
+</footer>
+
+
+<script>
+
+    // ================= QUESTIONS =================
+
+    const quizzes = {
+
+        Economics: [
+            {
+                question: "What is the study of how people use limited resources?",
+                answer: "Economics"
+            },
+            {
+                question: "What is the general increase in prices of goods and services called?",
+                answer: "Inflation"
+            },
+            {
+                question: "What is the amount of goods and services produced in a country called?",
+                answer: "GDP"
+            }
+        ],
+
+        Geography: [
+            {
+                question: "What is the largest continent?",
+                answer: "Asia"
+            },
+            {
+                question: "What is the longest river in Africa?",
+                answer: "Nile River"
+            },
+            {
+                question: "What is the capital city of Ethiopia?",
+                answer: "Addis Ababa"
+            }
+        ],
+
+        History: [
+            {
+                question: "Who was the first emperor of Ethiopia?",
+                answer: "Tewodros II"
+            },
+            {
+                question: "In which year did Ethiopia defeat Italy at the Battle of Adwa?",
+                answer: "1896"
+            },
+            {
+                question: 'Who was known as the "Conquering Lion of the Tribe of Judah"?',
+                answer: "Haile Selassie"
+            }
+        ],
+
+        Marketing: [
+            {
+                question: "What is the process of promoting and selling products or services?",
+                answer: "marketing"
+            },
+            {
+                question: "What are the 4 Ps of marketing?",
+                answer: "Product, Price, Place, and Promotion"
+            },
+            {
+                question: "What is a way of promoting a product, service, or brand to customers?",
+                answer: "advertising"
+            }
+        ]
+
+    };
+
+
+    // ================= VARIABLES =================
+
+    let currentSubject = "";
+    let currentQuestion = 0;
+    let score = 0;
+
+    let totalScore = 0;
+    let totalQuestions = 0;
+
+    let incorrectQuestions = [];
+
+    let studentName = "";
+
+
+    // ================= ENTER SYSTEM =================
+
+    function enterSystem() {
+
+        let name =
+            document.getElementById("studentName").value.trim();
+
+        if (name === "") {
+
+            alert("⚠️ Please enter your name.");
+
+            return;
+        }
+
+        studentName = name;
+
+        document.getElementById("displayName").innerText =
+            studentName;
+
+        document.getElementById("welcome").classList.add("hidden");
+
+        document.getElementById("mainSystem").classList.remove("hidden");
+    }
+
+
+    // ================= START QUIZ =================
+
+    function startQuiz(subject) {
+
+        currentSubject = subject;
+        currentQuestion = 0;
+        score = 0;
+
+        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("result").classList.add("hidden");
+        document.getElementById("information").classList.add("hidden");
+        document.getElementById("quiz").classList.remove("hidden");
+
+        document.getElementById("quizTitle").innerText =
+            "📚 " + subject + " Quiz";
+
+        showQuestion();
+    }
+
+
+    // ================= SHOW QUESTION =================
+
+    function showQuestion() {
+
+        let quiz = quizzes[currentSubject];
+
+        document.getElementById("questionNumber").innerText =
+            "Question " + (currentQuestion + 1) +
+            " of " + quiz.length;
+
+        document.getElementById("question").innerText =
+            quiz[currentQuestion].question;
+
+        document.getElementById("answer").value = "";
+
+        document.getElementById("feedback").innerText = "";
+
+        let progress =
+            (currentQuestion / quiz.length) * 100;
+
+        document.getElementById("progressBar").style.width =
+            progress + "%";
+
+        document.getElementById("answer").focus();
+    }
+
+
+    // ================= ENTER KEY =================
+
+    function handleEnter(event) {
+
+        if (event.key === "Enter") {
+            submitAnswer();
+        }
+    }
+
+
+    // ================= CHECK ANSWER =================
+
+    function submitAnswer() {
+
+        let quiz = quizzes[currentSubject];
+
+        let userAnswer =
+            document.getElementById("answer").value.trim();
+
+        if (userAnswer === "") {
+
+            document.getElementById("feedback").innerText =
+                "⚠️ Please enter an answer.";
+
+            return;
+        }
+
+        let correctAnswer =
+            quiz[currentQuestion].answer;
+
+        if (
+            userAnswer.toLowerCase() ===
+            correctAnswer.toLowerCase()
+        ) {
+
+            score++;
+
+            document.getElementById("feedback").innerHTML =
+                "<span class='correct'>✅ Correct!</span>";
+
+        } else {
+
+            document.getElementById("feedback").innerHTML =
+                "<span class='wrong'>❌ Incorrect! Correct answer: "
+                + correctAnswer +
+                "</span>";
+
+            incorrectQuestions.push({
+                subject: currentSubject,
+                question: quiz[currentQuestion].question,
+                userAnswer: userAnswer,
+                correctAnswer: correctAnswer
+            });
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion >= quiz.length) {
+
+            totalScore += score;
+            totalQuestions += quiz.length;
+
+            updateDashboard();
+
+            setTimeout(showResult, 700);
+
+        } else {
+
+            setTimeout(showQuestion, 700);
+        }
+    }
+
+
+    // ================= RESULT =================
+
+    function showResult() {
+
+        document.getElementById("quiz").classList.add("hidden");
+
+        document.getElementById("result").classList.remove("hidden");
+
+        let quiz = quizzes[currentSubject];
+
+        let percentage =
+            (score / quiz.length) * 100;
+
+        let grade;
+        let message;
+
+        if (percentage >= 90) {
+
+            grade = "A+";
+            message = "🌟 Excellent! Outstanding work!";
+
+        }
+
+        else if (percentage >= 80) {
+
+            grade = "A";
+            message = "👏 Great job! Keep going!";
+
+        }
+
+        else if (percentage >= 60) {
+
+            grade = "B";
+            message = "💪 Good effort. A little more practice will help!";
+
+        }
+
+        else {
+
+            grade = "F";
+            message = "📚 Don't give up! Keep practicing and try again!";
+
+        }
+
+        document.getElementById("resultSubject").innerText =
+            "Student: " + studentName +
+            " | Subject: " + currentSubject;
+
+        document.getElementById("resultScore").innerText =
+            "Score: " + score + " / " + quiz.length;
+
+        document.getElementById("resultPercentage").innerText =
+            "Percentage: " + percentage.toFixed(1) + "%";
+
+        document.getElementById("resultGrade").innerText =
+            "Grade: " + grade;
+
+        document.getElementById("resultMessage").innerText =
+            "Result: " + message;
+    }
+
+
+    // ================= RETAKE =================
+
+    function restartQuiz() {
+
+        startQuiz(currentSubject);
+    }
+
+
+    // ================= DASHBOARD UPDATE =================
+
+    function updateDashboard() {
+
+        document.getElementById("scoreStat").innerText =
+            totalScore;
+
+        document.getElementById("questionStat").innerText =
+            totalQuestions;
+
+        if (totalQuestions > 0) {
+
+            let percentage =
+                (totalScore / totalQuestions) * 100;
+
+            document.getElementById("percentageStat").innerText =
+                percentage.toFixed(1) + "%";
+        }
+    }
+
+
+    // ================= TOTAL SCORE =================
+
+    function showTotal() {
+
+        document.getElementById("menu").classList.add("hidden");
+
+        document.getElementById("information").classList.remove("hidden");
+
+        document.getElementById("infoTitle").innerText =
+            "🏆 Total Score";
+
+        document.getElementById("infoContent").innerHTML =
+            "<h3>Total Score: " + totalScore + "</h3>" +
+            "<p>Questions Answered: " + totalQuestions + "</p>";
+    }
+
+
+    // ================= PERCENTAGE =================
+
+    function showPercentage() {
+
+        document.getElementById("menu").classList.add("hidden");
+
+        document.getElementById("information").classList.remove("hidden");
+
+        document.getElementById("infoTitle").innerText =
+            "📊 Overall Percentage";
+
+        if (totalQuestions === 0) {
+
+            document.getElementById("infoContent").innerHTML =
+                "<p>No quiz has been taken yet.</p>";
+
+        } else {
+
+            let percentage =
+                (totalScore / totalQuestions) * 100;
+
+            document.getElementById("infoContent").innerHTML =
+                "<h3>Overall Percentage: "
+                + percentage.toFixed(1)
+                + "%</h3>";
+        }
+    }
+
+
+    // ================= GRADE =================
+
+    function showGrade() {
+
+        document.getElementById("menu").classList.add("hidden");
+
+        document.getElementById("information").classList.remove("hidden");
+
+        document.getElementById("infoTitle").innerText =
+            "🎓 Grade Evaluator";
+
+        if (totalQuestions === 0) {
+
+            document.getElementById("infoContent").innerHTML =
+                "<p>No quiz has been taken yet.</p>";
+
+            return;
+        }
+
+        let percentage =
+            (totalScore / totalQuestions) * 100;
+
+        let grade;
+        let result;
+
+        if (percentage >= 90) {
+
+            grade = "A+";
+            result = "Excellent";
+
+        }
+
+        else if (percentage >= 80) {
+
+            grade = "A";
+            result = "Good";
+
+        }
+
+        else if (percentage >= 60) {
+
+            grade = "B";
+            result = "Needs Practice";
+
+        }
+
+        else {
+
+            grade = "F";
+            result = "Failed";
+        }
+
+        document.getElementById("infoContent").innerHTML =
+            "<h3>Grade: " + grade + "</h3>" +
+            "<p>Result: " + result + "</p>" +
+            "<p>Percentage: " +
+            percentage.toFixed(1) +
+            "%</p>";
+    }
+
+
+    // ================= INCORRECT QUESTIONS =================
+
+    function showIncorrect() {
+
+        document.getElementById("menu").classList.add("hidden");
+
+        document.getElementById("information").classList.remove("hidden");
+
+        document.getElementById("infoTitle").innerText =
+            "❌ Incorrect Questions";
+
+        if (incorrectQuestions.length === 0) {
+
+            document.getElementById("infoContent").innerHTML =
+                "<h3>🎉 Excellent!</h3>" +
+                "<p>You have no incorrect answers.</p>";
+
+            return;
+        }
+
+        let html = "";
+
+        incorrectQuestions.forEach(function(item) {
+
+            html +=
+                "<div class='review-item'>" +
+                "<strong>Subject:</strong> " +
+                item.subject +
+                "<br><br>" +
+
+                "<strong>Question:</strong> " +
+                item.question +
+                "<br>" +
+
+                "<strong>Your Answer:</strong> " +
+                item.userAnswer +
+                "<br>" +
+
+                "<strong>Correct Answer:</strong> " +
+                item.correctAnswer +
+
+                "</div>";
+        });
+
+        document.getElementById("infoContent").innerHTML =
+            html;
+    }
+
+
+    // ================= HOME =================
+
+    function goHome() {
+
+        document.getElementById("quiz").classList.add("hidden");
+
+        document.getElementById("result").classList.add("hidden");
+
+        document.getElementById("information").classList.add("hidden");
+
+        document.getElementById("menu").classList.remove("hidden");
+
+        updateDashboard();
+    }
+
+</script>
+
+</body>
+</html>
